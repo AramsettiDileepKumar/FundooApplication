@@ -14,8 +14,5 @@ namespace CommonLayer.Model.ResponseDTO
         public string Colour { get; set; }
         public bool IsArchived { get; set; } = false;
         public bool IsDeleted { get; set; } = false;
-
-
-
     }
 }

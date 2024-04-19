@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLogicLayer.Mailsender
 {
-    public static class MailSenderClass
+    public  class MailSenderClass
     {
         public static void sendMail(String ToMail, String otp)
         {
@@ -30,7 +30,7 @@ namespace BusinessLogicLayer.Mailsender
                 smtpClient.EnableSsl = true;
 
                 string loginName = "dileep20721@outlook.com";
-                string loginPassword = "bqludfkobmxrdqsh";
+                string loginPassword = "ammadeepu@123";
 
                 System.Net.NetworkCredential networkCredential = new System.Net.NetworkCredential(loginName, loginPassword);
                 smtpClient.UseDefaultCredentials = false;
@@ -69,7 +69,7 @@ namespace BusinessLogicLayer.Mailsender
                 smtpClient.EnableSsl = true;
 
                 string loginName = "dileep20721@outlook.com";
-                string loginPassword = "bqludfkobmxrdqsh";
+                string loginPassword = "ammadeepu@123";
 
                 System.Net.NetworkCredential networkCredential = new System.Net.NetworkCredential(loginName, loginPassword);
                 smtpClient.UseDefaultCredentials = false;

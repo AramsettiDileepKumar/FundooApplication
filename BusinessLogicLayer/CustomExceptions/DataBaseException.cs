@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace BusinessLogicLayer.CustomExceptions
 {
-    public class UserNotFoundException:Exception
+    public class DataBaseException:Exception
     {
-        public UserNotFoundException() { }  
-        public UserNotFoundException(string? message) : base(message) { }
+        public DataBaseException() { }
+        public DataBaseException(string message) : base(message) { }
     }
 }

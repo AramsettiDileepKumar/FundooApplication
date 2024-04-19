@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.Text.Json.Serialization;
+using CommonLayer.Model.ResponseDTO;
 
 namespace ModelLayer.Models
 {
@@ -14,8 +15,6 @@ namespace ModelLayer.Models
         public int StatusCode { get; set; }
         public bool Success { get; set; } = true;
         public string Message { get; set; } = string.Empty;
-        // public string? Token { get; set; }
         public T? Data { get; set; }
-
     }
 }

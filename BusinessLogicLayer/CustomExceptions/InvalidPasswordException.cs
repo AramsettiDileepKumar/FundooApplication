@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace BusinessLogicLayer.CustomExceptions
 {
-    public class UserNotFoundException:Exception
+    public class InvalidPasswordException:Exception
     {
-        public UserNotFoundException() { }  
-        public UserNotFoundException(string? message) : base(message) { }
+        public InvalidPasswordException() { }
+        public InvalidPasswordException(string message) : base(message) { }
     }
 }

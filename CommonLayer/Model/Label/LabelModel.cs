@@ -9,7 +9,6 @@ namespace CommonLayer.Model.Label
     public class LabelModel
     {
         public string LabelName { get; set; } = string.Empty;
-        public int UserId { get; set; }
         public int NoteId { get; set; }
     }
 }

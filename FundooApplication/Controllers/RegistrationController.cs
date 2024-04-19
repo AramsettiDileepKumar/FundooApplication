@@ -7,13 +7,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer.Models;
+using Nest;
 using RepositoryLayer.Entity;
 
 namespace FundooApplication.Controllers
 {
-   //[Authorize]
+  
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RegistrationController : ControllerBase
     {
         private readonly IRegistrationBL registrationBL;
@@ -21,43 +23,79 @@ namespace FundooApplication.Controllers
         {
             this.registrationBL = registrationBL;
         }
-        [Route("api/getAllUsers")]
         [HttpGet]
         public async Task<IActionResult> GetDetails()
         {
             try
             {
-                return Ok(await registrationBL.GetDetails());
+                var result=await registrationBL.GetDetails();
+                if (result != null)
+                {
+                    var response = new ResponseModel<Registration>
+                    {
+                        StatusCode = 200,
+                        Success = true,
+                        Message = "Users  Details Fetched Successfully"
+                    };
+                    return Ok(response);
+                }
+                return BadRequest(new ResponseModel<Registration>
+                {
+                    StatusCode = 400,
+                    Success = false,
+                    Message = "User Not Found"
+                });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
         }
-       // [AllowAnonymous]
         [HttpPost]
+        [AllowAnonymous]
         public async Task<ActionResult> AddUser(UserRequest res)
         {
             try
             {
-                return Ok(await registrationBL.AddUser(res));
+                var result=await registrationBL.AddUser(res);
+                if (result)
+                {
+                    var response = new ResponseModel<Registration>
+                    {
+                        Success = true,
+                        Message = "User Registration Successful"
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    return BadRequest("invalid input");
+                }
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
-                return StatusCode(400, ex.StackTrace);
+                   return StatusCode(500, $"An error occurred while adding the user: {ex.Message}");
             }
+
         }
-        
+
         [HttpPut("{FirstName}")]
-        public async Task<ActionResult> UpdateUser(Registration res,string FirstName)
+        public async Task<ActionResult> UpdateUser(UserRequest res,string FirstName)
         {
             try
             {
-                return Ok(await registrationBL.UpdateUser(res, FirstName));
+               var result= await registrationBL.UpdateUser(res, FirstName);
+                var response = new ResponseModel<bool>
+                {
+                    Success = true,
+                    Message = "User Updated Successfully",
+                };
+                return Ok(response);
+
             }
             catch(UserNotFoundException ex) 
             {
-                return StatusCode(500,"Enter Valid User Details");
+                return StatusCode(500,$"Enter Valid User Details {ex.Message}");
             }
         }
       
@@ -66,33 +104,34 @@ namespace FundooApplication.Controllers
         {
             try
             {
-                return Ok(await registrationBL.DeleteUser(FirstName));
+                var result=await registrationBL.DeleteUser(FirstName);
+                var response = new ResponseModel<bool>
+                {
+                    Success = true,
+                    Message = "User Deleted Successfully",
+                    Data = result
+                };
+                return Ok(response);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return StatusCode(500, $"Enter Valid User Details {ex.Message}");
             }
         }
         
-       [AllowAnonymous]
-        [HttpPost("login")]
+        [AllowAnonymous]
+        [HttpPost("Login")]
         public async Task<IActionResult> Login(Userlogin userLogin)
         {
             try
-            {
-                
-
-                var token = await registrationBL.UserLogin(userLogin);
-
+            { 
+                var token=await registrationBL.UserLogin(userLogin);
                 var response = new ResponseModel<string>
                 {
-
-                    Message = "Login Sucessfull",
+                    Message = "Login Sucessful",
                     Data = token
-
                 };
-                return Ok(token);
-
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -107,7 +146,7 @@ namespace FundooApplication.Controllers
                     };
                     return Conflict(response);
                 }
-                else if (ex is PasswordMisMatchException)
+                else if (ex is InvalidPasswordException)
                 {
                     var response = new ResponseModel<Userlogin>
                     {
@@ -121,20 +160,126 @@ namespace FundooApplication.Controllers
                 else
                 {
                     return StatusCode(500, $"An error occurred while processing the login request: {ex.Message}");
+
                 }
             }
 
+
         }
         [HttpPut("ForgotPassword/{Email}")]
-        public async Task<IActionResult> ForgotPassword(String Email)
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword(string Email)
         {
-            return Ok(await registrationBL.ForgotPassword(Email));
-        }
-        [HttpPut("ResetPassword/{otp}/{Newpassword}")]
-        public async Task<IActionResult> ResetPassword(String otp, String Newpassword)
-        {
-            return Ok(await registrationBL.ResetPassword(otp, Newpassword));
-        }
+            try
+            {
+                var result=await registrationBL.ForgotPassword(Email);
+                if (result != null)
+                {
+                    var response = new ResponseModel<string>
+                    {
+                        Success = true,
+                        Message = "Email sent successfully.",
+                        Data = result
 
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    var response = new ResponseModel<string>
+                    {
+                        Success = false,
+                        Message = "Failed to send email.",
+                        Data = null
+                    };
+                    return BadRequest(response);
+                }
+            }
+            catch (UserNotFoundException ex)
+            {
+                var response = new ResponseModel<string>
+                {
+
+                    Success = false,
+                    Message = $"Error sending email: {ex.Message}",
+                    Data = null
+                };
+                return StatusCode(500, response);
+            }
+            catch (EmailSendingException ex)
+            {
+                var response = new ResponseModel<string>
+                {
+
+                    Success = false,
+                    Message = $"Error sending email: {ex.Message}",
+                    Data = null
+                };
+                return StatusCode(500, response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseModel<string>
+                {
+                    Success = false,
+                    Message = $"An unexpected error occurred: {ex.Message}",
+                    Data = null
+                };
+                return StatusCode(500, response);
+            }
+        }
+           
+        [HttpPut("ResetPassword/{otp}/{Newpassword}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword(string otp, string Newpassword)
+        {
+            try
+            {
+                var result=await registrationBL.ResetPassword(otp, Newpassword);
+                if (result != null)
+                {
+                    var response = new ResponseModel<string>
+                    {
+                        Success = true,
+                        Message = "Reset Password  successful.",
+                        Data = result
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    var response = new ResponseModel<string>
+                    {
+                        Success = false,
+                        Message = "Failed to Reset",
+                        Data = null
+                    };
+                    return BadRequest(response);
+                }
+            }
+            catch (UserNotFoundException ex)
+            {
+                var response = new ResponseModel<string>
+                {
+
+                    Success = false,
+                    Message = $"Error sending email: {ex.Message}",
+                    Data = null
+                };
+                return StatusCode(500, response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseModel<string>
+                {
+                    Success = false,
+                    Message = $"An unexpected error occurred: {ex.StackTrace}",
+                    Data = null
+                };
+                return StatusCode(500, response);
+            }
+        }
+           
+        
     }
 }

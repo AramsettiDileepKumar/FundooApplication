@@ -1,4 +1,5 @@
 ﻿using CommonLayer.Model.RequestDTO;
+using CommonLayer.Model.ResponseDTO;
 using RepositoryLayer.Entity;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,11 @@ namespace RepositoryLayer.Interface.NoteService
 {
     public interface INoteService
     {
-        public Task<string> CreateNote(NotesRequest Request);
-        public Task<Notes> GetNotesById(int id);
-       public Task<String> UpdateNoteById(int NoteId, UpdateNotesRequest note);
-       public Task<string> DeleteNoteById(int NoteId);
+       public Task<string> CreateNote(NotesRequest Request, int userid);
+       public Task<NotesResponse> UpdateNoteById(int NoteId,int userid, UpdateNotesRequest note);
+       public Task<bool> DeleteNoteById(int NoteId,int userid);
+       public Task<IEnumerable<NotesResponse>> GetAllNote(int userId);
+        public Task<IEnumerable<NotesResponse>> GetNoteByNoteId(int NoteId, int UserId);
+
     }
 }

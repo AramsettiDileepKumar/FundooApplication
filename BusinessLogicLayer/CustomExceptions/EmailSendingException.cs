@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace BusinessLogicLayer.CustomExceptions
 {
-    public class UserNotFoundException:Exception
+    public class EmailSendingException:Exception
     {
-        public UserNotFoundException() { }  
-        public UserNotFoundException(string? message) : base(message) { }
+        public EmailSendingException() { }
+        public EmailSendingException(string message):base(message) { }
     }
 }

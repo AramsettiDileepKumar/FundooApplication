@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogicLayer", "Busin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepositoryLayer", "RepositoryLayer\RepositoryLayer.csproj", "{9DD227E9-E6FF-497F-99EC-99F098228917}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonLayer", "CommonLayer\CommonLayer.csproj", "{831E9D98-96D4-454B-B7C5-8229600F6728}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelLayer", "CommonLayer\ModelLayer.csproj", "{831E9D98-96D4-454B-B7C5-8229600F6728}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
