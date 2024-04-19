@@ -11,6 +11,7 @@ using NLog;
 using RepositoryLayer.Context;
 using RepositoryLayer.Entity;
 using RepositoryLayer.Exceptions;
+using RepositoryLayer.Helper;
 using RepositoryLayer.Interface.UserService;
 using RepositoryLayer.Service;
 using System;
@@ -62,8 +63,10 @@ namespace RepositoryLayer.Service
                 var query = $"insert into Registration values(@FirstName,@LastName,@EmailId,@Password)";
                 using (var connection = _context.CreateConnection())
                 {
-                    var result = await connection.ExecuteAsync(query, res);
-                    _logger.Info("New User Added");
+                     var result = await connection.ExecuteAsync(query, res);
+                     _logger.Info("New User Added");
+                      helper h = new helper();
+                      h.producer(res);
                       return result > 0;
                 }
             }
