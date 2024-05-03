@@ -47,7 +47,7 @@ namespace FundooApplication.Controllers
                 {
                     var response = new ResponseModel<string>
                     {
-                        StatusCode = 200,
+                        Success = true,
                         Message = "Note Created Successfully",
                         Data = Note
                     };
@@ -55,7 +55,6 @@ namespace FundooApplication.Controllers
                 }
                 var respons = new ResponseModel<string>
                 {
-                    StatusCode = 400,
                     Success=false,
                     Message = "User Not Found",
                     Data = Note
@@ -66,7 +65,7 @@ namespace FundooApplication.Controllers
             {
                 var response = new ResponseModel<IEnumerable<NotesResponse>>
                 {
-                    StatusCode = 500,
+                   Success=false,
                     Message = ex.Message,
 
                 };
@@ -88,7 +87,7 @@ namespace FundooApplication.Controllers
                     var notesList = JsonConvert.DeserializeObject<List<Notes>>(cachedLabels);
                     var response = new ResponseModel<IEnumerable<Notes>>
                     {
-                        StatusCode = 200,
+                        Success=true,
                         Message = "Note Fetched Successfully From Cache",
                         Data = notesList
                     };
@@ -100,7 +99,7 @@ namespace FundooApplication.Controllers
                     await cache.StringSetAsync(cachekey, JsonConvert.SerializeObject(notes), TimeSpan.FromMinutes(10));
                     var response = new ResponseModel<IEnumerable<NotesResponse>>
                     {
-                        StatusCode = 200,
+                        Success = true,
                         Message = "Note Fetched Successfully From Data Base",
                         Data = notes
                     };
@@ -108,7 +107,6 @@ namespace FundooApplication.Controllers
                 }
                 var respons = new ResponseModel<IEnumerable<NotesResponse>>
                 {
-                    StatusCode = 400,
                     Success=false,
                     Message = "User Not Found",
                     Data = notes
@@ -124,7 +122,7 @@ namespace FundooApplication.Controllers
                     Message = $"User Not Found: {ex.Message}",
                     Data = null
                 };
-                return StatusCode(500, response);
+                return Ok(response);
             }
             catch (SqlException ex)
             {
@@ -137,7 +135,7 @@ namespace FundooApplication.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new ResponseModel<string>
+                return Ok( new ResponseModel<string>
                 {
                     Success = false,
                     Message = $"An error occurred {ex.Message}",
@@ -159,13 +157,14 @@ namespace FundooApplication.Controllers
                 {
                     var response = new ResponseModel<NotesResponse>
                     {
+                        Success = true,
                         Message = "Note updated successfully",
                         Data = NoteUpdate
                     };
                     return Ok(response);
                 }
                 var respons = new ResponseModel<NotesResponse>
-                {
+                {   Success = false,
                     Message = "User Not found",
                     Data = NoteUpdate
                 };
@@ -187,7 +186,7 @@ namespace FundooApplication.Controllers
                     Success = false,
                     Message = ex.Message
                 };
-                return StatusCode(500, response);
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -196,7 +195,7 @@ namespace FundooApplication.Controllers
                     Success = false,
                     Message = "An unexpected error occurred: " + ex.Message
                 };
-                return StatusCode(500, response);
+                return Ok(response);
             }
         }
         [HttpDelete("{NoteId}")]
@@ -237,7 +236,7 @@ namespace FundooApplication.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new ResponseModel<string>
+                return Ok( new ResponseModel<string>
                 {
                     Success = false,
                     Message = $"An error occurred: {ex.Message}",
@@ -259,7 +258,7 @@ namespace FundooApplication.Controllers
                     var notesList = JsonConvert.DeserializeObject<List<Notes>>(cachedLabels);
                     var response = new ResponseModel<IEnumerable<Notes>>
                     {
-                        StatusCode = 200,
+                        Success = true,
                         Message = "Note Fetched Successfully From Cache",
                         Data = notesList
                     };
@@ -271,7 +270,7 @@ namespace FundooApplication.Controllers
                     await cache.StringSetAsync(cachekey, JsonConvert.SerializeObject(notes), TimeSpan.FromMinutes(10));
                     var response = new ResponseModel<IEnumerable<NotesResponse>>
                     {
-                        StatusCode = 200,
+                        Success = true,
                         Message = "Note Fetched Successfully From Data Base",
                         Data = notes
                     };
@@ -295,11 +294,11 @@ namespace FundooApplication.Controllers
                     Message = $"Error sending email: {ex.Message}",
                     Data = null
                 };
-                return StatusCode(500, response);
+                return Ok(response);
             }
             catch (SqlException ex)
             {
-                return StatusCode(500, new ResponseModel<string>
+                return Ok( new ResponseModel<string>
                 {
                     Success = false,
                     Message = "An error occurred while retrieving note from the database.",
@@ -308,7 +307,7 @@ namespace FundooApplication.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new ResponseModel<string>
+                return Ok( new ResponseModel<string>
                 {
 
                     Success = false,

@@ -39,7 +39,17 @@ builder.Services.AddScoped<ICollaborationBL, CollaborationBL>();
 builder.Services.AddScoped<ICollaborationRL, CollaborationRL>();
 builder.Services.AddScoped<INotesLabelBL, NotesLabelBL>();
 builder.Services.AddScoped<INotesLabelRL, NotesLabelRL>();
-
+builder.Services.AddCors(Options =>
+{
+    Options.AddPolicy("AllowSpecificOrigin",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:4200/", "https://localhost:7068")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowAnyOrigin();
+        });
+});
 //Logger------------------------------------------------------------------------------------------
 var logpath = Path.Combine(Directory.GetCurrentDirectory(), "Logs");
 NLog.GlobalDiagnosticsContext.Set("LogDirectory", logpath);
@@ -138,7 +148,7 @@ app.UseSwaggerUI(c =>
     c.OAuthClientId("swagger-ui");
     c.OAuthAppName("Swagger UI");
 });
-
+app.UseCors("AllowSpecificOrigin");
 // Configure the HTTP request pipeline
 app.UseHttpsRedirection();
 

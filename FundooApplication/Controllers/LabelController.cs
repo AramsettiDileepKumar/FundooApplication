@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer.Models;
 using Nest;
+using RepositoryLayer.Entity;
 using RepositoryLayer.Service;
 using System.Security.Claims;
 
@@ -34,7 +35,7 @@ namespace FundooApplication.Controllers
                 {
                     var response = new ResponseModel<bool>
                     {
-                        StatusCode = 200,
+                        Success = true,
                         Message = "Label Created Successfully",
                         Data = result
                     };
@@ -42,7 +43,7 @@ namespace FundooApplication.Controllers
                 }
                 var respons = new ResponseModel<bool>
                 {
-                    StatusCode = 400,
+                    Success = false,
                     Message = "Label Not Found",
                     Data = result
                 };
@@ -51,7 +52,7 @@ namespace FundooApplication.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new ResponseModel<string>
+                return Ok( new ResponseModel<string>
                 {
                     Success = false,
                     Message = $"An error occurred {ex.Message}",
@@ -71,7 +72,7 @@ namespace FundooApplication.Controllers
                 {
                     var response = new ResponseModel<bool>
                     {
-                        StatusCode = 200,
+                        Success = true,
                         Message = "Label Updated Successfully",
                         Data = result
                     };
@@ -79,7 +80,7 @@ namespace FundooApplication.Controllers
                 }
                 var respons = new ResponseModel<bool>
                 {
-                    StatusCode = 400,
+                    Success =false,
                     Message = "Label Not found",
                     Data = result
                 };
@@ -88,7 +89,7 @@ namespace FundooApplication.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new ResponseModel<string>
+                return Ok(new ResponseModel<string>
                 {
                     Success = false,
                     Message = $"An error occurred {ex.Message}",
@@ -108,7 +109,7 @@ namespace FundooApplication.Controllers
                 {
                     var response = new ResponseModel<bool>
                     {
-                        StatusCode = 200,
+                        Success = true,
                         Message = "Label Deleted Successfully",
                         Data = result
                     };
@@ -116,7 +117,7 @@ namespace FundooApplication.Controllers
                 }
                 var respons = new ResponseModel<bool>
                 {
-                    StatusCode =400,
+                    Success=false,
                     Message = "Label Not Found",
                     Data = result
                 };
@@ -124,7 +125,7 @@ namespace FundooApplication.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new ResponseModel<string>
+                return Ok( new ResponseModel<string>
                 {
                     Success = false,
                     Message = $"An error occurred {ex.Message}",
@@ -142,7 +143,7 @@ namespace FundooApplication.Controllers
                 {
                     var response = new ResponseModel<IEnumerable<LabelInfo>>
                     {
-                        StatusCode = 200,
+                        Success=true,
                         Message = "Label Details Fetched Successfully",
                         Data = result
                     };
@@ -150,7 +151,7 @@ namespace FundooApplication.Controllers
                 }
                 var respons = new ResponseModel<IEnumerable<LabelInfo>>
                 {
-                    StatusCode = 400,
+                    Success=true,
                     Message = "Label Not Found",
                     Data = result
                 };
@@ -159,7 +160,7 @@ namespace FundooApplication.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return Ok(new ResponseModel<Notes> {Success=false,Message=ex.Message});
             }
         }
 

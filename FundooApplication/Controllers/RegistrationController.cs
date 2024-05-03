@@ -3,7 +3,9 @@ using BusinessLogicLayer.InterfaceBL;
 using CommonLayer.Model;
 using CommonLayer.Model.Note;
 using CommonLayer.Model.RequestDTO;
+using CommonLayer.Model.RequestDTO.ResponseDTO;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer.Models;
@@ -16,6 +18,7 @@ namespace FundooApplication.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
+    [EnableCors]
     public class RegistrationController : ControllerBase
     {
         private readonly IRegistrationBL registrationBL;
@@ -31,26 +34,25 @@ namespace FundooApplication.Controllers
                 var result=await registrationBL.GetDetails();
                 if (result != null)
                 {
-                    var response = new ResponseModel<Registration>
+                    var response = new ResponseModel<IEnumerable<UserResponse>>
                     {
-                        StatusCode = 200,
                         Success = true,
-                        Message = "Users  Details Fetched Successfully"
+                        Message = "Users  Details Fetched Successfully",
+                        Data=result
+                        
                     };
                     return Ok(response);
                 }
                 return BadRequest(new ResponseModel<Registration>
                 {
-                    StatusCode = 400,
                     Success = false,
                     Message = "User Not Found"
                 });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return Ok(new ResponseModel<Registration> { Success = false, Message = ex.Message });            }
             }
-        }
         [HttpPost]
         [AllowAnonymous]
         public async Task<ActionResult> AddUser(UserRequest res)
@@ -63,7 +65,7 @@ namespace FundooApplication.Controllers
                     var response = new ResponseModel<Registration>
                     {
                         Success = true,
-                        Message = "User Registration Successful"
+                        Message = "User Registration Successful",
                     };
                     return Ok(response);
                 }
@@ -74,7 +76,7 @@ namespace FundooApplication.Controllers
             }
             catch (Exception ex)
             {
-                   return StatusCode(500, $"An error occurred while adding the user: {ex.Message}");
+                return Ok(new ResponseModel<Registration> { Success = false, Message = ex.Message });
             }
 
         }
@@ -95,7 +97,7 @@ namespace FundooApplication.Controllers
             }
             catch(UserNotFoundException ex) 
             {
-                return StatusCode(500,$"Enter Valid User Details {ex.Message}");
+                return Ok(new ResponseModel<Registration>{ Success = false, Message = ex.Message });
             }
         }
       
@@ -115,7 +117,7 @@ namespace FundooApplication.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Enter Valid User Details {ex.Message}");
+                return Ok(new ResponseModel<Registration> { Success = false, Message = ex.Message });
             }
         }
         
@@ -159,7 +161,7 @@ namespace FundooApplication.Controllers
                 }
                 else
                 {
-                    return StatusCode(500, $"An error occurred while processing the login request: {ex.Message}");
+                    return Ok(new ResponseModel<Registration> { Success = false, Message = ex.Message });
 
                 }
             }
@@ -204,7 +206,7 @@ namespace FundooApplication.Controllers
                     Message = $"Error sending email: {ex.Message}",
                     Data = null
                 };
-                return StatusCode(500, response);
+                return Ok(response);
             }
             catch (EmailSendingException ex)
             {
@@ -215,7 +217,7 @@ namespace FundooApplication.Controllers
                     Message = $"Error sending email: {ex.Message}",
                     Data = null
                 };
-                return StatusCode(500, response);
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -223,9 +225,8 @@ namespace FundooApplication.Controllers
                 {
                     Success = false,
                     Message = $"An unexpected error occurred: {ex.Message}",
-                    Data = null
                 };
-                return StatusCode(500, response);
+                return Ok(response);
             }
         }
            
@@ -266,7 +267,7 @@ namespace FundooApplication.Controllers
                     Message = $"Error sending email: {ex.Message}",
                     Data = null
                 };
-                return StatusCode(500, response);
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -276,7 +277,7 @@ namespace FundooApplication.Controllers
                     Message = $"An unexpected error occurred: {ex.StackTrace}",
                     Data = null
                 };
-                return StatusCode(500, response);
+                return Ok(response);
             }
         }
            

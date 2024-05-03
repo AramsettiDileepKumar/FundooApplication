@@ -37,16 +37,14 @@ namespace FundooApplication.Controllers
                 {
                     var response = new ResponseModel<bool>
                     {
-                        StatusCode=200,
+                        Success= true,
                         Message = "Collaboration Successfull",
                         Data=result
-
                     };
                     return Ok(response);
                 }
                 var respons = new ResponseModel<bool>
                 {
-                    StatusCode = 200,
                     Success=false,
                     Message = "Invalid User",
                     Data = result
@@ -89,6 +87,7 @@ namespace FundooApplication.Controllers
                 {
                     var response = new ResponseModel<IEnumerable<CollaborationInfoModel>>
                     {
+                        Success = true,
                         Message = "Collaborator Fetched Successfully",
                         Data = result
                     };
@@ -128,6 +127,7 @@ namespace FundooApplication.Controllers
                 {
                     var response = new ResponseModel<IEnumerable<CollaborationInfoModel>>
                     {
+                        Success = true,
                         Message = "Collaborators Fetched Successfully",
                         Data = collaborators
                     };
@@ -200,7 +200,7 @@ namespace FundooApplication.Controllers
                     Message = "An error occurred while removing the collaborator",
                     Data = null
                 };
-                return StatusCode(500, response);
+                return Ok(response);
             }
         }
 
