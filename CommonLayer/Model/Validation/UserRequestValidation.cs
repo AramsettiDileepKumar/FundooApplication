@@ -27,7 +27,7 @@ namespace CommonLayer.Model.Validation
                         }
                         else
                         {
-                            if (!Regex.IsMatch(valid.UserPassword, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*]{8,16}$"))
+                            if (!Regex.IsMatch(valid.UserPassword, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*]{6,16}$"))
 
                             {
                                 return new ValidationResult("Given Password is in correct Format");
@@ -39,8 +39,6 @@ namespace CommonLayer.Model.Validation
                 else return new ValidationResult("Given FirstName is in correct Format");
 
                 return ValidationResult.Success;
-
-
             }
             return new ValidationResult("The given object is null");
         }
